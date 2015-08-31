@@ -9,5 +9,5 @@ echo -e "value 1\nvalue 2" | kubernetes-secret -n test-secret key-1 key-2 | kube
 Or provide input as a CSV (or specify a different delimeter).
 
 ```bash
-echo -e "key-1,value 1\nkey-2,value 2" | kubernetes-secret -n test-secret -e -d ',' | kubectl create -f -
+echo -e "key-1,value 1\nkey-2,value 2\n" | kubernetes-secret -n test-secret -e -d ',' | kubectl create -f -
 ```

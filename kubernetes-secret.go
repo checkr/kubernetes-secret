@@ -64,7 +64,8 @@ func main() {
 			}
 
 			// Encode and add the value to the resource.
-			Resource.Data[components[0]] = base64.StdEncoding.EncodeToString([]byte(components[1]))
+			varname := strings.Replace(strings.ToLower(components[0]), "_", "-", -1)
+			Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(components[1]))
 		}
 	} else {
 
