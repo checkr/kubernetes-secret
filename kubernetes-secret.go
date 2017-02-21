@@ -63,7 +63,7 @@ func main() {
 
 			// Encode and add the value to the resource.
 			varname := strings.Replace(strings.ToLower(components[0]), "_", "-", -1)
-			Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(components[1]))
+			Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(strings.TrimSpace(components[1])))
 		}
 	} else {
 		// Use the command line arguments as keys.
