@@ -31,8 +31,8 @@ func init() {
 	Resource.Type = "Opaque"
 	Resource.Data = make(map[string]string)
 	flag.StringVar(&Resource.Metadata.Name, "n", "secret", "name")
-	flag.StringVar(&Resource.Metadata.Namespace, "s", "default", "name")
-	flag.BoolVar(&Env, "e", false, "delimited key/value pairs as input")
+	flag.StringVar(&Resource.Metadata.Namespace, "ns", "default", "namespace")
+	flag.BoolVar(&Env, "e", true, "delimited key/value pairs as input")
 	flag.StringVar(&Delimiter, "d", "=", "delimiter (if -e is specified)")
 }
 
@@ -44,9 +44,7 @@ func main() {
 
 	// Check if we should read this in as delimited values.
 	if Env {
-
 		for {
-
 			// Get a value by reading bytes from stdin up to the next newline.
 			// (Newline characters aren't allowed in secrets.)
 			line, err := r.ReadString('\n')
@@ -68,10 +66,8 @@ func main() {
 			Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(components[1]))
 		}
 	} else {
-
 		// Use the command line arguments as keys.
 		for _, arg := range flag.Args() {
-
 			// Get a value by reading bytes from stdin up to the next newline.
 			// (Newline characters aren't allowed in secrets.)
 			value, err := r.ReadBytes('\n')
