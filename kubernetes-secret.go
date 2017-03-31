@@ -66,7 +66,7 @@ func main() {
 			}
 
 			// Encode and add the value to the resource.
-			varname := strings.Replace(strings.ToUpper(components[0]), "-", "_", -1)
+			varname := strings.TrimSpace(components[0])
 			value := strings.TrimSpace(components[1])
 
 			if strings.HasPrefix(value, FileLinkIndicator) {
