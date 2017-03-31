@@ -5,7 +5,9 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -24,6 +26,7 @@ var Resource struct {
 
 var Env bool
 var Delimiter string
+var FileLinkIndicator string
 
 func init() {
 	Resource.APIVersion = "v1"
@@ -34,6 +37,7 @@ func init() {
 	flag.StringVar(&Resource.Metadata.Namespace, "ns", "default", "namespace")
 	flag.BoolVar(&Env, "e", true, "delimited key/value pairs as input")
 	flag.StringVar(&Delimiter, "d", "=", "delimiter (if -e is specified)")
+	flag.StringVar(&FileLinkIndicator, "f", ">>>", "file link indicator (if -f is specified)")
 }
 
 func main() {
@@ -62,8 +66,19 @@ func main() {
 			}
 
 			// Encode and add the value to the resource.
-			varname := strings.Replace(strings.ToLower(components[0]), "_", "-", -1)
-			Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(strings.TrimSpace(components[1])))
+			varname := strings.Replace(strings.ToUpper(components[0]), "-", "_", -1)
+			value := strings.TrimSpace(components[1])
+
+			if strings.HasPrefix(value, FileLinkIndicator) {
+				file := strings.TrimPrefix(value, FileLinkIndicator)
+				bytes, err := ioutil.ReadFile(file)
+				if err != nil {
+					fmt.Print(err)
+				}
+				Resource.Data[varname] = base64.StdEncoding.EncodeToString(bytes)
+			} else {
+				Resource.Data[varname] = base64.StdEncoding.EncodeToString([]byte(strings.TrimSpace(components[1])))
+			}
 		}
 	} else {
 		// Use the command line arguments as keys.
